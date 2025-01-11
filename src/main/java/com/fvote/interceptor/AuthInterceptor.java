@@ -26,13 +26,21 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return false;
+        }
+
+        System.out.println(request.getHeader("Authorization"));
         if (request.getHeader("Authorization") == null) {
+            System.out.println(1);
             response.setStatus(401);
             return false;
         }
 
         String token = request.getHeader("Authorization");
         if (!token.startsWith("Bearer ")) {
+            System.out.println(2);
             response.setStatus(401);
             return false;
         }
@@ -42,10 +50,12 @@ public class AuthInterceptor implements HandlerInterceptor {
         try {
             claims = JwtUtil.parseJWT(token);
         } catch (NoSuchAlgorithmException e) {
+            System.out.println(3);
             response.setStatus(401);
             return false;
         }
         if (claims == null) {
+            System.out.println(4);
             response.setStatus(401);
             return false;
         }
@@ -55,15 +65,18 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         Optional<Users> user = userService.getUserByUsername(username);
         if (user.isEmpty()) {
+            System.out.println(5);
             response.setStatus(401);
             return false;
         }
 
         val redisTokenKey = "user_token:" + user.get().getId();
         if (!finalToken.equals(redisUtil.get(redisTokenKey))) {
+            System.out.println(6);
             response.setStatus(401);
             return false;
         }
+        System.out.println(7);
 
         return true;
     }

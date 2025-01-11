@@ -8,9 +8,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserLoginResp {
-    public Long userId;
+    public Long id;
 
     public String username;
+
+    public String email;
 
     public String token;
 }

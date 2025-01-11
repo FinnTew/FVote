@@ -48,9 +48,10 @@ public class UserController {
         redisUtil.set(redisTokenKey, token);
 
         UserLoginResp resp = new UserLoginResp();
-        resp.setUserId(userFromDB.getId());
+        resp.setId(userFromDB.getId());
         resp.setUsername(userFromDB.getUsername());
-        resp.setToken("Bearer " + token);
+        resp.setEmail(userFromDB.getEmail());
+        resp.setToken(token);
 
         return Result.success(
                 "Login success",
@@ -59,7 +60,7 @@ public class UserController {
     }
 
     @PostMapping("/registry")
-    public Result<?> registry(@RequestBody UserRegisterReq req) {
+    public Result<?> registry(@RequestBody UserRegisterReq req) throws NoSuchAlgorithmException {
         if (req.getUsername().length() < 8) {
             return Result.error("Username must be at least 8 characters");
         }
@@ -89,11 +90,21 @@ public class UserController {
 
         Users userCreated = userService.createUser(user);
 
-        UserRegisterResp resp = new UserRegisterResp();
-        resp.setUserId(userCreated.getId());
+        String uuid = JwtUtil.getUUID();
+        String tokenSubject = userCreated.getUsername() + ":" + uuid;
+        String token = JwtUtil.createJWT(tokenSubject);
+
+        String redisTokenKey = "user_token:" + userCreated.getId();
+        redisUtil.set(redisTokenKey, token);
+
+        UserLoginResp resp = new UserLoginResp();
+        resp.setId(userCreated.getId());
+        resp.setUsername(userCreated.getUsername());
+        resp.setEmail(userCreated.getEmail());
+        resp.setToken(token);
 
         return Result.success(
-                "User registered successfully",
+                "Register and login success",
                 resp
         );
     }
@@ -120,10 +131,15 @@ public class UserController {
 
         String username = subArray[0];
         Users userFromDB = userService.getUserByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+        UserLoginResp resp = new UserLoginResp();
+        resp.setId(userFromDB.getId());
+        resp.setUsername(userFromDB.getUsername());
+        resp.setEmail(userFromDB.getEmail());
+        resp.setToken(token);
 
         return Result.success(
                 "Token verified successfully",
-                userFromDB
+                resp
         );
     }
 
@@ -158,9 +174,10 @@ public class UserController {
         redisUtil.set(redisTokenKey, newToken);
 
         UserLoginResp resp = new UserLoginResp();
-        resp.setUserId(userFromDB.getId());
+        resp.setId(userFromDB.getId());
         resp.setUsername(userFromDB.getUsername());
-        resp.setToken("Bearer " + newToken);
+        resp.setEmail(userFromDB.getEmail());
+        resp.setToken(newToken);
 
         return Result.success(
                 "Token refreshed successfully",

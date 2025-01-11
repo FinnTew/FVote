@@ -23,13 +23,13 @@ DROP TABLE IF EXISTS `choices`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `choices` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `topic_id` bigint NOT NULL,
-  `choice_text` varchar(255) NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `topic_id` (`topic_id`),
-  CONSTRAINT `choices_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE CASCADE
+                           `id` bigint NOT NULL AUTO_INCREMENT,
+                           `topic_id` bigint NOT NULL,
+                           `choice_text` varchar(255) NOT NULL,
+                           `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                           PRIMARY KEY (`id`),
+                           KEY `topic_id` (`topic_id`),
+                           CONSTRAINT `choices_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -50,17 +50,17 @@ DROP TABLE IF EXISTS `topics`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `topics` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `description` varchar(255) DEFAULT NULL,
-  `is_multiple_choice` tinyint(1) DEFAULT '0',
-  `max_choices` int DEFAULT '1',
-  `created_by` bigint NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `created_by` (`created_by`),
-  CONSTRAINT `topics_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE
+                          `id` bigint NOT NULL AUTO_INCREMENT,
+                          `title` varchar(255) NOT NULL,
+                          `description` varchar(255) DEFAULT NULL,
+                          `is_multiple_choice` tinyint(1) DEFAULT '0',
+                          `max_choices` int DEFAULT '1',
+                          `created_by` bigint NOT NULL,
+                          `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                          `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                          PRIMARY KEY (`id`),
+                          KEY `created_by` (`created_by`),
+                          CONSTRAINT `topics_ibfk_1` FOREIGN KEY (`created_by`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -81,15 +81,15 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `users` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`)
+                         `id` bigint NOT NULL AUTO_INCREMENT,
+                         `username` varchar(255) NOT NULL,
+                         `password` varchar(255) NOT NULL,
+                         `email` varchar(255) DEFAULT NULL,
+                         `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                         `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                         PRIMARY KEY (`id`),
+                         UNIQUE KEY `username` (`username`),
+                         UNIQUE KEY `email` (`email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -111,15 +111,15 @@ DROP TABLE IF EXISTS `votes`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `votes` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `topic_id` bigint NOT NULL,
-  `choice_id` bigint NOT NULL,
-  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  KEY `topic_id` (`topic_id`),
-  KEY `choice_id` (`choice_id`),
-  CONSTRAINT `votes_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `votes_ibfk_3` FOREIGN KEY (`choice_id`) REFERENCES `choices` (`id`) ON DELETE CASCADE
+                         `id` bigint NOT NULL AUTO_INCREMENT,
+                         `topic_id` bigint NOT NULL,
+                         `choice_id` bigint NOT NULL,
+                         `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+                         PRIMARY KEY (`id`),
+                         KEY `topic_id` (`topic_id`),
+                         KEY `choice_id` (`choice_id`),
+                         CONSTRAINT `votes_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `topics` (`id`) ON DELETE CASCADE,
+                         CONSTRAINT `votes_ibfk_3` FOREIGN KEY (`choice_id`) REFERENCES `choices` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

@@ -98,6 +98,76 @@ public class UserController {
         );
     }
 
+    @GetMapping("/verify")
+    public Result<?> verify(HttpServletRequest request) throws NoSuchAlgorithmException {
+        String token = request.getHeader("Authorization");
+        if (token == null) {
+            return Result.error("Token not found");
+        }
+
+        if (!token.startsWith("Bearer ")) {
+            return Result.error("Invalid token");
+        }
+
+        token = token.strip().split(" ")[1];
+        Claims claims = JwtUtil.parseJWT(token);
+        if (claims == null) {
+            return Result.error("Invalid token");
+        }
+
+        String subject = claims.getSubject();
+        String[] subArray = subject.split(":");
+
+        String username = subArray[0];
+        Users userFromDB = userService.getUserByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+
+        return Result.success(
+                "Token verified successfully",
+                userFromDB
+        );
+    }
+
+    @GetMapping("refresh")
+    public Result<?> refresh(HttpServletRequest request) throws NoSuchAlgorithmException {
+        String token = request.getHeader("Authorization");
+        if (token == null) {
+            return Result.error("Token not found");
+        }
+
+        if (!token.startsWith("Bearer ")) {
+            return Result.error("Invalid token");
+        }
+
+        token = token.strip().split(" ")[1];
+        Claims claims = JwtUtil.parseJWT(token);
+        if (claims == null) {
+            return Result.error("Invalid token");
+        }
+
+        String subject = claims.getSubject();
+        String[] subArray = subject.split(":");
+
+        String username = subArray[0];
+        Users userFromDB = userService.getUserByUsername(username).orElseThrow(() -> new RuntimeException("User not found"));
+
+        String uuid = JwtUtil.getUUID();
+        String tokenSubject = userFromDB.getUsername() + ":" + uuid;
+        String newToken = JwtUtil.createJWT(tokenSubject);
+
+        String redisTokenKey = "user_token:" + userFromDB.getId();
+        redisUtil.set(redisTokenKey, newToken);
+
+        UserLoginResp resp = new UserLoginResp();
+        resp.setUserId(userFromDB.getId());
+        resp.setUsername(userFromDB.getUsername());
+        resp.setToken("Bearer " + newToken);
+
+        return Result.success(
+                "Token refreshed successfully",
+                resp
+        );
+    }
+
     @GetMapping("/logout")
     public Result<?> logout(HttpServletRequest request) throws NoSuchAlgorithmException {
         String token = request.getHeader("Authorization");

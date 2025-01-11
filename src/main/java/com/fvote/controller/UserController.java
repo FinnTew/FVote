@@ -59,7 +59,7 @@ public class UserController {
         );
     }
 
-    @PostMapping("/registry")
+    @PostMapping("/register")
     public Result<?> registry(@RequestBody UserRegisterReq req) throws NoSuchAlgorithmException {
         if (req.getUsername().length() < 8) {
             return Result.error("Username must be at least 8 characters");

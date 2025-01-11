@@ -50,7 +50,7 @@ public class UserController {
         UserLoginResp resp = new UserLoginResp();
         resp.setUserId(userFromDB.getId());
         resp.setUsername(userFromDB.getUsername());
-        resp.setToken(token);
+        resp.setToken("Bearer " + token);
 
         return Result.success(
                 "Login success",

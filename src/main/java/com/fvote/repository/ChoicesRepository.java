@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ChoicesRepository extends JpaRepository<Choices, Long>, JpaSpecificationExecutor<Choices> {
     List<Choices> findAllByTopicId(Long topicId);
+
+    void deleteByTopicId(Long id);
 }

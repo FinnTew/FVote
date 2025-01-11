@@ -105,6 +105,11 @@ public class UserController {
             return Result.error("Token not found");
         }
 
+        if (!token.startsWith("Bearer ")) {
+            return Result.error("Invalid token");
+        }
+
+        token = token.strip().split(" ")[1];
         Claims claims = JwtUtil.parseJWT(token);
         String subject = claims.getSubject();
         String[] subArray = subject.split(":");

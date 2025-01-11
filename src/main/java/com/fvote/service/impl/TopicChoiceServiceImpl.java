@@ -28,6 +28,11 @@ public class TopicChoiceServiceImpl implements TopicChoiceService {
     }
 
     @Override
+    public List<Topics> getTopicsByUserId(Long userId) {
+        return topicsRepository.findAllByCreatedBy(userId);
+    }
+
+    @Override
     @Transactional
     public Choices createChoice(Choices choice) {
         return choicesRepository.save(choice);
@@ -68,6 +73,7 @@ public class TopicChoiceServiceImpl implements TopicChoiceService {
     @Transactional
     public void deleteTopic(Long id) {
         topicsRepository.deleteById(id);
+        choicesRepository.deleteByTopicId(id);
     }
 
     @Override

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class VoteServiceImpl implements VoteService {
@@ -32,13 +33,13 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<Votes> getAllVotes() {
-        return votesRepository.findAll();
+    public Optional<Votes> getVoteByTopicIdAndChoiceId(Long topicId, Long choiceId) {
+        return votesRepository.findVotesByTopicIdAndChoiceId(topicId, choiceId);
     }
 
     @Override
-    public List<Votes> getVotesByUserId(Long userId) {
-        return votesRepository.findAllByUserId(userId);
+    public List<Votes> getAllVotes() {
+        return votesRepository.findAll();
     }
 
     @Override
@@ -51,7 +52,6 @@ public class VoteServiceImpl implements VoteService {
     public Votes updateVote(Long id, Votes updatedVote) {
         Votes existingVote = getVoteById(id);
         existingVote.setTopicId(updatedVote.getTopicId());
-        existingVote.setUserId(updatedVote.getUserId());
         existingVote.setChoiceId(updatedVote.getChoiceId());
         existingVote.setCreatedAt(new Date());
         return votesRepository.save(existingVote);

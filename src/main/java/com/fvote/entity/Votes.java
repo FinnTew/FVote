@@ -27,9 +27,6 @@ public class Votes implements Serializable {
     @Column(name = "topic_id", nullable = false)
     private Long topicId;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
     @Column(name = "choice_id", nullable = false)
     private Long choiceId;
 

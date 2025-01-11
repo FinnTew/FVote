@@ -2,6 +2,7 @@ package com.fvote.service;
 
 import com.fvote.entity.Votes;
 import java.util.List;
+import java.util.Optional;
 
 public interface VoteService {
 
@@ -9,9 +10,9 @@ public interface VoteService {
 
     Votes getVoteById(Long id);
 
-    List<Votes> getAllVotes();
+    Optional<Votes> getVoteByTopicIdAndChoiceId(Long topicId, Long choiceId);
 
-    List<Votes> getVotesByUserId(Long userId);
+    List<Votes> getAllVotes();
 
     List<Votes> getVotesByTopicId(Long topicId);
 

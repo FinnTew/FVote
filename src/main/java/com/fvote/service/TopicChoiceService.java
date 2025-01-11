@@ -8,6 +8,8 @@ public interface TopicChoiceService {
 
     Topics createTopic(Topics topic);
 
+    List<Topics> getTopicsByUserId(Long userId);
+
     Choices createChoice(Choices choice);
 
     Topics getTopicById(Long id);
